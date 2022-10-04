@@ -1,11 +1,5 @@
-resource "random_string" "resource_code" {
-  length  = 5
-  special = false
-  upper   = false
-}
-
 resource "azurerm_storage_account" "tfstate" {
-  name                             = "tfstate${random_string.resource_code.result}"
+  name                             = "tfstateoc2222"
   resource_group_name              = var.rg_name
   location                         = var.rg_location
   account_tier                     = "Standard"

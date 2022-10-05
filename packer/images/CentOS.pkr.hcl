@@ -16,19 +16,18 @@ variable "rg_location"{
     sensitive = true
 }
 
-source "azure-arm" "basic-example" {
+source "azure-arm" "CentOS8" {
   use_azure_cli_auth = true
   resource_group_name = var.rg_name
   storage_account = "packersa01"
-  subscription_id = "4cedc5dd-e3ad-468d-bf66-32e31bdb9148"
 
   capture_container_name = "images"
   capture_name_prefix = "packer"
 
   os_type = "Linux"
-  image_publisher = "Canonical"
-  image_offer = "UbuntuServer"
-  image_sku = "14.04.4-LTS"
+  image_publisher = "OpenLogic"
+  image_offer = "CentOS"
+  image_sku = "8_2-gen2"
 
   azure_tags = {
     dept = "engineering"
@@ -39,5 +38,17 @@ source "azure-arm" "basic-example" {
 }
 
 build {
-  sources = ["sources.azure-arm.basic-example"]
+  sources = ["sources.azure-arm.CentOS8"]
+
+  
+provisioner "shell" {
+   execute_command = "chmod +x {{ .Path }}; {{ .Vars }} sudo -E sh '{{ .Path }}'"
+   inline = [
+        "/usr/sbin/waagent -force -deprovision+user && export HISTSIZE=0 && sync"
+   ]
+   inline_shebang = "/bin/sh -x"
 }
+
+}
+
+#Deprovision
